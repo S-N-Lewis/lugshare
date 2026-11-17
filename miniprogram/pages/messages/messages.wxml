@@ -1,0 +1,25 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="loading">加载中…</view>
+  <block wx:elif="{{list.length > 0}}">
+    <view wx:for="{{list}}" wx:key="convId" class="conv" data-convid="{{item.convId}}" data-tripid="{{item.tripId}}" data-to="{{item.otherOpenid}}" data-name="{{item.otherName}}" data-route="{{item.tripRoute}}" bindtap="openChat">
+      <view class="avatar">{{item.otherName.charAt(0)}}</view>
+      <view class="conv-main">
+        <view class="conv-top">
+          <text class="conv-name">{{item.otherName}}</text>
+          <text class="conv-time">{{item.lastTimeText}}</text>
+        </view>
+        <view class="conv-route">{{item.tripRoute}}</view>
+        <view class="conv-bottom">
+          <text class="conv-last ellipsis">{{item.lastText}}</text>
+          <text wx:if="{{item.unread > 0}}" class="badge">{{item.unread > 99 ? '99+' : item.unread}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+  <view wx:else class="empty">
+    <view class="empty-icon">💬</view>
+    <text>还没有消息</text>
+    <text class="empty-sub">在行程详情里联系带货人/求带人，对话会出现在这里</text>
+    <view class="btn-ghost empty-btn" bindtap="goHall">去大厅看看</view>
+  </view>
+</view>

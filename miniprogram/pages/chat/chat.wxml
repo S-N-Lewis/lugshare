@@ -1,0 +1,26 @@
+<view class="page">
+  <!-- 顶部行程提示 -->
+  <view wx:if="{{route}}" class="trip-banner">行程 {{route}} · 请勿在站内留下银行卡等敏感信息</view>
+
+  <!-- 消息列表 -->
+  <scroll-view class="msg-list" scroll-y scroll-top="{{scrollTop}}" bindscrolltoupper="loadOlder" enable-flex>
+    <view wx:if="{{!hasMore && msgs.length > 0}}" class="load-tip">没有更早的消息了</view>
+    <view wx:for="{{msgs}}" wx:key="_id" class="msg-row {{item.mine ? 'mine' : ''}}">
+      <view wx:if="{{!item.mine}}" class="msg-avatar">{{toName.charAt(0)}}</view>
+      <view class="msg-body">
+        <view class="bubble {{item.mine ? 'bubble-mine' : ''}} {{item.failed ? 'bubble-failed' : ''}}">
+          <text>{{item.text}}</text>
+        </view>
+        <view wx:if="{{item.failed}}" class="msg-fail" data-id="{{item._id}}" bindtap="retryFail">发送失败 · 点击重试</view>
+        <text wx:else class="msg-time">{{item.pending ? '发送中…' : item.timeText}}</text>
+      </view>
+    </view>
+    <view wx:if="{{msgs.length === 0}}" class="empty-chat">打个招呼吧，说清物品和重量更容易得到回复</view>
+  </scroll-view>
+
+  <!-- 输入栏 -->
+  <view class="input-bar safe-bottom">
+    <input class="msg-input" value="{{input}}" bindinput="onInput" bindconfirm="send" placeholder="输入消息…" confirm-type="send" maxlength="500" />
+    <view class="send-btn {{input ? '' : 'send-disabled'}}" bindtap="send">发送</view>
+  </view>
+</view>

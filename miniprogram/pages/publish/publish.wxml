@@ -1,0 +1,119 @@
+<view class="page safe-bottom">
+  <view class="form-card">
+    <view class="section-title">行程信息</view>
+    <view class="row">
+      <view class="col">
+        <text class="label">出发城市 *</text>
+        <input class="input" value="{{form.fromCity}}" data-key="fromCity" bindinput="onField" placeholder="如：奥克兰" />
+      </view>
+      <view class="col">
+        <text class="label">到达城市 *</text>
+        <input class="input" value="{{form.toCity}}" data-key="toCity" bindinput="onField" placeholder="如：上海" />
+      </view>
+    </view>
+
+    <view class="row">
+      <view class="col">
+        <text class="label">出发日期 *</text>
+        <picker mode="date" value="{{form.departDate}}" bindchange="onDate">
+          <view class="input picker {{form.departDate ? '' : 'ph'}}">{{form.departDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="col">
+        <text class="label">航班号（选填）</text>
+        <input class="input" value="{{form.flightNo}}" data-key="flightNo" bindinput="onField" placeholder="如：NZ289" />
+      </view>
+    </view>
+
+    <view class="row" style="margin-top:24rpx;">
+      <view class="col">
+        <text class="label">收货截止日（重要）</text>
+        <picker mode="date" value="{{form.deadline}}" bindchange="onDeadline">
+          <view class="input picker {{form.deadline ? '' : 'ph'}}">{{form.deadline || '物品寄到的最后日期'}}</view>
+        </picker>
+      </view>
+      <view class="col"></view>
+    </view>
+    <view class="hint">收货截止日通常早于出发日——对方要预留国内快递时间，这是真正的死线。</view>
+
+    <view class="field">
+      <text class="label">路线说明（选填）</text>
+      <input class="input" value="{{form.routeNote}}" data-key="routeNote" bindinput="onField" placeholder="如：奥克兰转香港，行李箱还有空间" />
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="section-title">可捎额度与计费</view>
+    <view class="row">
+      <view class="col">
+        <text class="label">可捎重量 kg *</text>
+        <input class="input" type="digit" value="{{form.capacityKg}}" data-key="capacityKg" bindinput="onField" placeholder="如：8" />
+      </view>
+      <view class="col">
+        <text class="label">计费单价 ¥/kg</text>
+        <input class="input" type="digit" value="{{form.pricePerKg}}" data-key="pricePerKg" bindinput="onField" placeholder="0 表示面议" />
+      </view>
+    </view>
+    <view class="row">
+      <view class="col">
+        <text class="label">最低收费 ¥</text>
+        <input class="input" type="digit" value="{{form.minFee}}" data-key="minFee" bindinput="onField" placeholder="选填" />
+      </view>
+      <view class="col">
+        <text class="label">收货地址</text>
+        <input class="input" value="{{form.pickupAddress}}" data-key="pickupAddress" bindinput="onField" placeholder="选填" />
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">其他备注（选填）</text>
+      <textarea class="textarea" value="{{form.note}}" data-key="note" bindinput="onField" placeholder="如：仅限小件、不接受液体等" maxlength="200" />
+    </view>
+  </view>
+
+  <!-- 品类与责任条款：说清楚能省掉大量来回追问（借鉴小红书捎带一线经验） -->
+  <view class="form-card">
+    <view class="section-title">可接受品类</view>
+    <view class="hint" style="margin-bottom:16rpx;">点选你愿意捎带的品类，未列出的会在详情页显示为"需确认"</view>
+    <view class="chip-wrap">
+      <view wx:for="{{categories}}" wx:key="key"
+        class="chip {{form.acceptedItems.indexOf(item.key) >= 0 ? 'chip-on' : ''}}"
+        data-kind="acceptedItems" data-key="{{item.key}}" bindtap="toggleOption">{{item.label}}</view>
+    </view>
+
+    <view class="section-title" style="margin-top:32rpx;">明确不接的品类</view>
+    <view class="chip-wrap">
+      <view wx:for="{{categories}}" wx:key="key"
+        class="chip chip-off {{form.rejectedItems.indexOf(item.key) >= 0 ? 'chip-rejected-on' : ''}}"
+        data-kind="rejectedItems" data-key="{{item.key}}" bindtap="toggleOption">{{item.label}}</view>
+    </view>
+
+    <view class="section-title" style="margin-top:32rpx;">责任条款</view>
+    <view class="hint" style="margin-bottom:16rpx;">如实勾选，这是对方选你的重要依据</view>
+    <view class="chip-wrap">
+      <view wx:for="{{liabilityOptions}}" wx:key="*this"
+        class="chip {{form.liabilities.indexOf(item) >= 0 ? 'chip-on' : ''}}"
+        data-kind="liabilities" data-key="{{item}}" bindtap="toggleOption">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="section-title">联系方式（选填，线下自行沟通）</view>
+    <view class="field">
+      <text class="label">微信号</text>
+      <input class="input" value="{{form.contactWx}}" data-key="contactWx" bindinput="onField" placeholder="方便对方联系你" />
+    </view>
+    <view class="field">
+      <text class="label">称呼</text>
+      <input class="input" value="{{form.nickName}}" data-key="nickName" bindinput="onField" placeholder="如：小林" />
+    </view>
+  </view>
+
+  <view class="compliance" bindtap="onAgree">
+    <view class="checkbox {{agreed ? 'checked' : ''}}">{{agreed ? '✓' : ''}}</view>
+    <text class="compliance-text">{{complianceText}}</text>
+  </view>
+
+  <view class="submit-wrap">
+    <view class="btn-primary {{submitting ? 'disabled' : ''}}" bindtap="onSubmit">{{submitting ? '发布中…' : '发布行程'}}</view>
+  </view>
+</view>

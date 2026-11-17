@@ -1,0 +1,7 @@
+.es { display: flex; flex-direction: column; align-items: center; padding: 100rpx 40rpx; }
+.es-icon { font-size: 96rpx; opacity: .5; }
+.es-text { font-size: 28rpx; color: #9AA0A6; margin-top: 24rpx; }
+.es-btn {
+  margin-top: 32rpx; padding: 16rpx 48rpx; border: 2rpx solid #1A73E8;
+  color: #1A73E8; border-radius: 44rpx; font-size: 28rpx;
+}

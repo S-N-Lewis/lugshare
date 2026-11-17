@@ -1,0 +1,30 @@
+<view class="page">
+  <!-- 顶部品牌 + 搜索 -->
+  <view class="hero">
+    <view class="hero-title">顺路捎</view>
+    <view class="hero-sub">顺路的行李额度，互助不浪费</view>
+
+    <view class="search-bar">
+      <input class="search-input" value="{{fromCity}}" bindinput="onFromInput" placeholder="出发城市" placeholder-class="ph" />
+      <text class="search-arrow">→</text>
+      <input class="search-input" value="{{toCity}}" bindinput="onToInput" placeholder="到达城市" placeholder-class="ph" />
+    </view>
+    <view class="filter-row">
+      <picker mode="date" value="{{date}}" bindchange="onDateChange">
+        <view class="date-btn {{date ? 'date-btn-on' : ''}}">{{date || '选择日期'}}</view>
+      </picker>
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+      <view class="reset-btn" bindtap="resetFilter">重置</view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="list-wrap">
+    <view wx:if="{{!initDone}}" class="loading-tip">加载中…</view>
+    <block wx:elif="{{list.length > 0}}">
+      <trip-card wx:for="{{list}}" wx:key="_id" trip="{{item}}" bind:tap="onTripTap" />
+      <view class="list-end">{{hasMore ? '上拉加载更多' : '— 没有更多了 —'}}</view>
+    </block>
+    <empty-state wx:else text="还没有符合条件的行程" buttonText="我来发布一个" bind:action="goPublish" />
+  </view>
+</view>

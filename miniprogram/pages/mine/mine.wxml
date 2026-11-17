@@ -1,0 +1,42 @@
+<view class="page safe-bottom">
+  <!-- 用户卡片 -->
+  <view class="user-card">
+    <view class="avatar">{{profile && profile.nickName ? profile.nickName.charAt(0) : '游'}}</view>
+    <view class="u-info">
+      <view wx:if="{{!editing}}" class="u-name" bindtap="onEdit">{{(profile && profile.nickName) || '点击设置称呼'}}</view>
+      <input wx:else class="u-name-input" value="{{editName}}" bindinput="onNameInput" placeholder="输入称呼" focus />
+      <view class="u-tip">顺路互助 · 让行李额度不浪费</view>
+    </view>
+    <view wx:if="{{editing}}" class="u-save" bindtap="saveProfile">保存</view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="card menu">
+    <view class="menu-item" bindtap="goOrders">
+      <text class="mi-icon">🧳</text><text class="mi-text">我的行程</text><text class="mi-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goPublish">
+      <text class="mi-icon">➕</text><text class="mi-text">发布行程</text><text class="mi-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="showComplianceModal">
+      <text class="mi-icon">📋</text><text class="mi-text">合规须知</text><text class="mi-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="card about">
+    <view class="section-title">关于顺路捎</view>
+    <view class="about-text">这是供同路人顺路互助的小工具：有空余行李额的人发布行程，需要捎带物品的人报名，双方在线下自行沟通与交接。小程序不代收任何费用，也不提供货运或代购服务。</view>
+    <view class="about-text">请务必遵守出发地与目的地的海关、航司规定，不携带违禁品，不用于商业代购或走私等牟利行为，违者后果自负。</view>
+  </view>
+
+  <!-- 合规弹窗 -->
+  <view wx:if="{{showCompliance}}" class="mask" bindtap="hideComplianceModal">
+    <view class="modal" catchtap="noop">
+      <view class="modal-title">合规须知</view>
+      <view class="modal-body">{{complianceText}}</view>
+      <view class="modal-body">海关对有偿带货、跨境代购查处的力度持续加强，个人不具备商业带货资质。请仅将其用于顺路、非营利的熟人/同路人互助。</view>
+      <view class="btn-primary modal-btn" bindtap="hideComplianceModal">我知道了</view>
+    </view>
+  </view>
+</view>

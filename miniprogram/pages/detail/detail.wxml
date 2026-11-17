@@ -1,0 +1,143 @@
+<view class="page safe-bottom" wx:if="{{trip}}">
+  <!-- 行程概览 -->
+  <view class="overview">
+    <view class="route">
+      <text class="city">{{trip.fromCity}}</text>
+      <text class="arrow">→</text>
+      <text class="city">{{trip.toCity}}</text>
+    </view>
+    <view class="sub-info">
+      <text>{{trip.departDate}}</text>
+      <text wx:if="{{trip.flightNo}}" class="dot">·</text>
+      <text wx:if="{{trip.flightNo}}">{{trip.flightNo}}</text>
+    </view>
+    <view class="status-line">
+      <text class="tag {{trip.status === 'open' ? 'tag-success' : 'tag-gray'}}">{{trip.status === 'open' ? '招募中' : '已关闭'}}</text>
+      <text class="owner">带货人：{{trip.ownerNick}}</text>
+    </view>
+  </view>
+
+  <!-- 额度进度 -->
+  <view class="card quota">
+    <view class="flex-between">
+      <text class="section-title">行李额进度</text>
+      <text class="quota-num">余 {{remainKg}} / {{trip.capacityKg}} kg</text>
+    </view>
+    <view class="bar"><view class="bar-in" style="width:{{percent}}%"></view></view>
+    <view class="fee-line" wx:if="{{trip.pricePerKg > 0}}">
+      计费 {{trip.pricePerKg}} 元/kg <text wx:if="{{trip.minFee > 0}}">· 最低 {{trip.minFee}} 元</text>
+    </view>
+    <view class="fee-line" wx:else>费用面议，双方线下协商</view>
+  </view>
+
+  <!-- 关键信息：收货截止日 / 品类 / 责任条款（借鉴小红书捎带一线经验） -->
+  <view class="card" wx:if="{{trip.deadline || trip.acceptedText || trip.rejectedText || trip.liabilities.length}}">
+    <view class="section-title">捎带约定</view>
+    <view wx:if="{{trip.deadline}}" class="desc"><text class="desc-k deadline">收货截止</text><text class="deadline-val">{{trip.deadline}}</text></view>
+    <view wx:if="{{trip.acceptedText}}" class="desc"><text class="desc-k">可带品类</text>{{trip.acceptedText}}</view>
+    <view wx:if="{{trip.rejectedText}}" class="desc"><text class="desc-k">不接品类</text><text class="reject-val">{{trip.rejectedText}}</text></view>
+    <view wx:if="{{trip.liabilities.length}}" class="liability-row">
+      <text wx:for="{{trip.liabilities}}" wx:key="*this" class="tag tag-warn">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 说明 -->
+  <view class="card" wx:if="{{trip.routeNote || trip.note || trip.pickupAddress}}">
+    <view class="section-title">说明</view>
+    <view wx:if="{{trip.routeNote}}" class="desc"><text class="desc-k">路线</text>{{trip.routeNote}}</view>
+    <view wx:if="{{trip.pickupAddress}}" class="desc"><text class="desc-k">收货地址</text>{{trip.pickupAddress}}</view>
+    <view wx:if="{{trip.note}}" class="desc"><text class="desc-k">备注</text>{{trip.note}}</view>
+  </view>
+
+  <!-- 合规提示 -->
+  <view class="compliance-tip">⚠️ 本工具仅供顺路互助。请遵守海关与航司规定，不携带违禁品，不用于商业代购/走私；费用由双方线下自行结清。</view>
+
+  <!-- 带货人视角：需求管理 -->
+  <block wx:if="{{isOwner}}">
+    <view class="section-head">
+      <text class="section-title">收到的需求（{{demands.length}}）</text>
+      <text class="status-toggle" bindtap="toggleTripStatus">{{trip.status === 'open' ? '关闭接单' : '重新开放'}}</text>
+    </view>
+    <view wx:if="{{demands.length === 0}}" class="no-demand">还没有人报名，分享给同路人试试</view>
+    <view wx:for="{{demands}}" wx:key="_id" class="card demand">
+      <view class="flex-between">
+        <text class="d-name">{{item.nickName}}</text>
+        <text class="tag tag-warn">{{item.statusLabel}}</text>
+      </view>
+      <view class="d-row">物品：{{item.itemName}}（约 {{item.estKgText}}kg）</view>
+      <view class="d-row">取货：{{item.pickupType === 'mail' ? '邮寄' : '当面交接'}}<text wx:if="{{item.address}}"> · {{item.address}}</text></view>
+      <view wx:if="{{item.expressNo}}" class="d-row">快递单号：
+        <text class="copy" data-text="{{item.expressNo}}" bindtap="copyText">{{item.expressNo}} 复制</text>
+      </view>
+      <view wx:if="{{item.note}}" class="d-row">备注：{{item.note}}</view>
+      <view class="d-time">{{item.createdText}} · {{item.nickName}}</view>
+      <view class="d-actions">
+        <view class="d-btn chat" data-openid="{{item.openid}}" data-name="{{item.nickName}}" data-item="{{item.itemName}}" bindtap="onContactApplicant">联系TA</view>
+        <view wx:if="{{item.status === 'pending'}}" class="d-btn primary" data-id="{{item._id}}" bindtap="onAccept">确认</view>
+        <view wx:if="{{item.status === 'pending'}}" class="d-btn" data-id="{{item._id}}" bindtap="onReject">拒绝</view>
+        <view wx:if="{{item.status === 'accepted'}}" class="d-btn primary" data-id="{{item._id}}" bindtap="onShip">已寄出</view>
+        <view wx:if="{{item.status === 'shipped'}}" class="d-btn primary" data-id="{{item._id}}" bindtap="onTransit">已登机</view>
+        <view wx:if="{{item.status === 'in_transit'}}" class="d-btn primary" data-id="{{item._id}}" bindtap="onDeliver">已送达</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 求带人视角：底部报名按钮 -->
+  <view wx:else class="apply-bar">
+    <button class="share-btn" open-type="share">分享</button>
+    <view class="btn-primary apply-btn" bindtap="openApply">{{trip.status === 'open' ? '我要报名托运' : '已关闭接单'}}</view>
+  </view>
+
+  <!-- 报名弹层 -->
+  <view wx:if="{{showApply}}" class="mask" bindtap="closeApply">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">报名托运</view>
+      <view class="sheet-scroll">
+        <view class="field">
+          <text class="label">物品名称 *</text>
+          <input class="input" value="{{apply.itemName}}" data-key="itemName" bindinput="onApplyField" placeholder="如：保健品 2 盒" />
+        </view>
+        <view class="field">
+          <text class="label">预估重量 kg *</text>
+          <input class="input" type="digit" value="{{apply.estKg}}" data-key="estKg" bindinput="onApplyField" placeholder="如：1.5（剩余 {{remainKg}}kg）" />
+        </view>
+        <view class="field">
+          <text class="label">取货方式</text>
+          <view class="pickup">
+            <view class="pick {{apply.pickupType === 'self' ? 'pick-on' : ''}}" data-type="SELF" bindtap="onPickupChange">当面交接</view>
+            <view class="pick {{apply.pickupType === 'mail' ? 'pick-on' : ''}}" data-type="MAIL" bindtap="onPickupChange">邮寄</view>
+          </view>
+        </view>
+        <view class="field" wx:if="{{apply.pickupType === 'mail'}}">
+          <text class="label">邮寄地址 *</text>
+          <input class="input" value="{{apply.address}}" data-key="address" bindinput="onApplyField" placeholder="寄到带货人处的地址" />
+        </view>
+        <view class="field">
+          <text class="label">快递单号（选填）</text>
+          <input class="input" value="{{apply.expressNo}}" data-key="expressNo" bindinput="onApplyField" placeholder="寄出后补充" />
+        </view>
+        <view class="field">
+          <text class="label">备注（选填）</text>
+          <textarea class="input textarea" value="{{apply.note}}" data-key="note" bindinput="onApplyField" placeholder="物品来源、包装等说明" maxlength="200" />
+        </view>
+        <view class="field">
+          <text class="label">你的称呼</text>
+          <input class="input" value="{{apply.nickName}}" data-key="nickName" bindinput="onApplyField" placeholder="选填" />
+        </view>
+        <view class="greeting-box" wx:if="{{apply.itemName}}">
+          <view class="flex-between">
+            <text class="greeting-label">联系带货人的招呼语（自动生成）</text>
+            <text class="greeting-copy" bindtap="copyGreeting">复制</text>
+          </view>
+          <view class="greeting-text">{{apply.greeting}}</view>
+          <view class="greeting-hint">报名成功后可在「行程」里复制，发给带货人</view>
+        </view>
+        <view class="compliance" bindtap="onAgree">
+          <view class="checkbox {{agreed ? 'checked' : ''}}">{{agreed ? '✓' : ''}}</view>
+          <text class="compliance-text">我承诺物品合规、非商业代购，遵守海关与航司规定，费用线下结清。</text>
+        </view>
+      </view>
+      <view class="btn-primary sheet-btn {{applying ? 'disabled' : ''}}" bindtap="submitApply">{{applying ? '提交中…' : '提交报名'}}</view>
+    </view>
+  </view>
+</view>

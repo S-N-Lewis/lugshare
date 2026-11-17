@@ -1,0 +1,5 @@
+<view class="es">
+  <view class="es-icon">📦</view>
+  <text class="es-text">{{text}}</text>
+  <view wx:if="{{buttonText}}" class="es-btn" bindtap="onAction">{{buttonText}}</view>
+</view>

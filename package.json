@@ -1,0 +1,13 @@
+{
+  "name": "lugshare",
+  "version": "1.0.0",
+  "private": true,
+  "description": "顺路捎 · 行李额互助小程序（微信原生 + 云开发）",
+  "scripts": {
+    "cloud": "node 云端部署.mjs",
+    "preview": "node 预览二维码.mjs"
+  },
+  "devDependencies": {
+    "miniprogram-ci": "^2.1.31"
+  }
+}

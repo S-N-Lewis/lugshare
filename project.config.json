@@ -1,0 +1,26 @@
+{
+  "description": "顺路捎 - 行李额互助小程序（原生 + 云开发）",
+  "packOptions": {
+    "ignore": [
+      { "type": "file", "value": "小程序项目档案.md" },
+      { "type": "file", "value": "README.md" }
+    ]
+  },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "compileHotReLoad": true
+  },
+  "compileType": "miniprogram",
+  "appid": "wx8ee905df5d8c0c84",
+  "projectname": "shunlu-shao",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "libVersion": "latest",
+  "condition": {}
+}

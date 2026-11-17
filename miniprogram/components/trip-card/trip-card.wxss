@@ -1,0 +1,26 @@
+.tc {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin: 20rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,.04);
+}
+.tc-top { display: flex; align-items: center; justify-content: space-between; }
+.tc-route { display: flex; align-items: center; }
+.tc-city { font-size: 34rpx; font-weight: 600; color: #202124; }
+.tc-arrow { font-size: 28rpx; color: #9AA0A6; margin: 0 16rpx; }
+.tc-date { font-size: 24rpx; color: #5F6368; }
+.tc-meta { display: flex; align-items: center; gap: 12rpx; margin-top: 20rpx; flex-wrap: wrap; }
+.tc-flight, .tc-tag {
+  font-size: 22rpx; padding: 6rpx 14rpx; border-radius: 8rpx;
+  background: #E8F0FE; color: #1A73E8;
+}
+.tc-tag-ghost { background: #F1F3F4; color: #5F6368; }
+.tc-tag-deadline { background: #FEF7E0; color: #B06000; }
+.tc-note { font-size: 26rpx; color: #5F6368; margin-top: 18rpx; }
+.tc-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20rpx; padding-top: 18rpx; border-top: 2rpx solid #F1F3F4;
+}
+.tc-fee { font-size: 28rpx; color: #E53935; font-weight: 600; }
+.tc-ago { font-size: 22rpx; color: #9AA0A6; }

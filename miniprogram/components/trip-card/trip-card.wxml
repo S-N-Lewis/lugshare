@@ -1,0 +1,24 @@
+<view class="tc" bindtap="onTap">
+  <view class="tc-top">
+    <view class="tc-route">
+      <text class="tc-city">{{trip.fromCity}}</text>
+      <text class="tc-arrow">→</text>
+      <text class="tc-city">{{trip.toCity}}</text>
+    </view>
+    <text class="tc-date">{{trip.departDate}}</text>
+  </view>
+
+  <view class="tc-meta">
+    <text wx:if="{{trip.flightNo}}" class="tc-flight">{{trip.flightNo}}</text>
+    <text class="tc-tag">余 {{remainKg}}kg</text>
+    <text wx:if="{{trip.deadline}}" class="tc-tag tc-tag-deadline">收货截止 {{trip.deadline}}</text>
+    <text class="tc-tag tc-tag-ghost">{{trip.ownerNick}}</text>
+  </view>
+
+  <view wx:if="{{trip.routeNote}}" class="tc-note ellipsis">{{trip.routeNote}}</view>
+
+  <view class="tc-bottom">
+    <text class="tc-fee">{{feeText}}</text>
+    <text class="tc-ago">{{ago}}</text>
+  </view>
+</view>

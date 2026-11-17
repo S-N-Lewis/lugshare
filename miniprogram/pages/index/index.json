@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "行程大厅",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "trip-card": "/components/trip-card/trip-card",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

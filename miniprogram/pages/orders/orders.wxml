@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'posted' ? 'on' : ''}}" data-tab="posted" bindtap="switchTab">我发布的</view>
+    <view class="tab {{tab === 'joined' ? 'on' : ''}}" data-tab="joined" bindtap="switchTab">我参与的</view>
+  </view>
+
+  <block wx:if="{{tab === 'posted'}}">
+    <view wx:if="{{posted.length === 0 && !loading}}" class="empty">
+      <view class="empty-icon">🧳</view>
+      <text>还没有发布行程</text>
+      <view class="btn-ghost empty-btn" bindtap="goPublish">去发布</view>
+    </view>
+    <view wx:for="{{posted}}" wx:key="_id" class="item" data-id="{{item._id}}" bindtap="goDetail">
+      <view class="flex-between">
+        <view class="item-route">{{item.fromCity}} → {{item.toCity}}</view>
+        <text class="tag {{item.status === 'open' ? 'tag-success' : 'tag-gray'}}">{{item.statusLabel}}</text>
+      </view>
+      <view class="item-meta">{{item.dateText}} · 余 {{item.remainKg}}/{{item.capacityKg}}kg</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view wx:if="{{joined.length === 0 && !loading}}" class="empty">
+      <view class="empty-icon">📮</view>
+      <text>还没有报名任何行程</text>
+      <view class="btn-ghost empty-btn" bindtap="goHall">去大厅看看</view>
+    </view>
+    <view wx:for="{{joined}}" wx:key="_id" class="item" data-id="{{item.tripId}}" bindtap="goDetail">
+      <view class="flex-between">
+        <view class="item-route ellipsis">{{item.itemName}}</view>
+        <text class="tag tag-warn">{{item.statusLabel}}</text>
+      </view>
+      <view class="item-meta">约 {{item.estKg}}kg · 报名于 {{item.dateText}}</view>
+      <view wx:if="{{item.greeting}}" class="greeting-line" data-text="{{item.greeting}}" catchtap="copyGreeting">联系话术：{{item.greeting}} <text class="greeting-copy">复制</text></view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,14 @@
+{
+  "envId": "REPLACE_WITH_YOUR_ENV_ID",
+  "functionRoot": "cloudfunctions",
+  "functions": [
+    { "name": "login" },
+    { "name": "trip" },
+    { "name": "demand" },
+    { "name": "chatSend" },
+    { "name": "chatConversations" },
+    { "name": "chatMessages" },
+    { "name": "chatReadMark" },
+    { "name": "subscribeNotify" }
+  ]
+}
